@@ -306,8 +306,8 @@ primary-hit.o: primary-hit.cpp /usr/include/stdc-predef.h primary-hit.h \
  /usr/include/c++/10/tuple /usr/include/c++/10/array \
  /usr/include/c++/10/bits/uses_allocator.h \
  /usr/include/c++/10/bits/invoke.h ../libgi/context.h ../libgi/scene.h \
- ../libgi/camera.h ../libgi/intersect.h /usr/include/c++/10/map \
- /usr/include/c++/10/bits/stl_tree.h \
+ ../libgi/camera.h ../libgi/intersect.h /usr/include/c++/10/iostream \
+ /usr/include/c++/10/map /usr/include/c++/10/bits/stl_tree.h \
  /usr/include/c++/10/ext/aligned_buffer.h \
  /usr/include/c++/10/bits/node_handle.h /usr/include/c++/10/optional \
  /usr/include/c++/10/bits/enable_special_members.h \
@@ -356,9 +356,8 @@ primary-hit.o: primary-hit.cpp /usr/include/stdc-predef.h primary-hit.h \
  /usr/include/png++/image_info.hpp /usr/include/png++/end_info.hpp \
  /usr/include/png++/io_base.hpp /usr/include/c++/10/cstdarg \
  /usr/include/png++/reader.hpp /usr/include/png++/writer.hpp \
- /usr/include/png++/generator.hpp /usr/include/c++/10/iostream \
- /usr/include/png++/streaming_base.hpp /usr/include/png++/consumer.hpp \
- /usr/include/png++/pixel_buffer.hpp \
+ /usr/include/png++/generator.hpp /usr/include/png++/streaming_base.hpp \
+ /usr/include/png++/consumer.hpp /usr/include/png++/pixel_buffer.hpp \
  /usr/include/png++/solid_pixel_buffer.hpp \
  /usr/include/png++/require_color_space.hpp \
  /usr/include/png++/convert_color_space.hpp /usr/include/png++/image.hpp \
@@ -754,6 +753,7 @@ primary-hit.h:
 ../libgi/scene.h:
 ../libgi/camera.h:
 ../libgi/intersect.h:
+/usr/include/c++/10/iostream:
 /usr/include/c++/10/map:
 /usr/include/c++/10/bits/stl_tree.h:
 /usr/include/c++/10/ext/aligned_buffer.h:
@@ -834,7 +834,6 @@ primary-hit.h:
 /usr/include/png++/reader.hpp:
 /usr/include/png++/writer.hpp:
 /usr/include/png++/generator.hpp:
-/usr/include/c++/10/iostream:
 /usr/include/png++/streaming_base.hpp:
 /usr/include/png++/consumer.hpp:
 /usr/include/png++/pixel_buffer.hpp:

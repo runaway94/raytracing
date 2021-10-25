@@ -11,7 +11,7 @@ using namespace std;
 //! Set up a camera ray using cam.up, cam.dir, cam.w, cam.h (see \ref camera::update_frustum)
 ray cam_ray(const camera &cam, int x, int y, vec2 offset) {
 
-	cout << "test." << endl;
+	//cout << "test." << endl;
 
 	vec3 U = cross(cam.dir, cam.up);
 	vec3 V = cross(U, cam.dir);

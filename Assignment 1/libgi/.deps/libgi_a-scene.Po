@@ -295,7 +295,9 @@ libgi_a-scene.o: scene.cpp /usr/include/stdc-predef.h scene.h camera.h \
  /usr/include/x86_64-linux-gnu/c++/10/bits/ctype_inline.h \
  /usr/include/c++/10/bits/locale_facets.tcc \
  /usr/include/c++/10/bits/basic_ios.tcc \
- /usr/include/c++/10/bits/ostream.tcc intersect.h material.h \
+ /usr/include/c++/10/bits/ostream.tcc intersect.h \
+ /usr/include/c++/10/iostream /usr/include/c++/10/istream \
+ /usr/include/c++/10/bits/istream.tcc material.h \
  /usr/include/c++/10/tuple /usr/include/c++/10/array \
  /usr/include/c++/10/bits/uses_allocator.h \
  /usr/include/c++/10/bits/invoke.h /usr/include/c++/10/vector \
@@ -322,7 +324,6 @@ libgi_a-scene.o: scene.cpp /usr/include/stdc-predef.h scene.h camera.h \
  /usr/include/c++/10/bits/locale_conv.h \
  /usr/include/c++/10/bits/unique_ptr.h /usr/include/c++/10/iomanip \
  /usr/include/c++/10/bits/quoted_string.h /usr/include/c++/10/sstream \
- /usr/include/c++/10/istream /usr/include/c++/10/bits/istream.tcc \
  /usr/include/c++/10/bits/sstream.tcc /usr/include/c++/10/codecvt \
  /usr/include/c++/10/ext/concurrence.h \
  /usr/include/c++/10/bits/shared_ptr.h \
@@ -355,9 +356,8 @@ libgi_a-scene.o: scene.cpp /usr/include/stdc-predef.h scene.h camera.h \
  /usr/include/png++/image_info.hpp /usr/include/png++/end_info.hpp \
  /usr/include/png++/io_base.hpp /usr/include/c++/10/cstdarg \
  /usr/include/png++/reader.hpp /usr/include/png++/writer.hpp \
- /usr/include/png++/generator.hpp /usr/include/c++/10/iostream \
- /usr/include/png++/streaming_base.hpp /usr/include/png++/consumer.hpp \
- /usr/include/png++/pixel_buffer.hpp \
+ /usr/include/png++/generator.hpp /usr/include/png++/streaming_base.hpp \
+ /usr/include/png++/consumer.hpp /usr/include/png++/pixel_buffer.hpp \
  /usr/include/png++/solid_pixel_buffer.hpp \
  /usr/include/png++/require_color_space.hpp \
  /usr/include/png++/convert_color_space.hpp /usr/include/png++/image.hpp \
@@ -867,6 +867,9 @@ rt.h:
 /usr/include/c++/10/bits/basic_ios.tcc:
 /usr/include/c++/10/bits/ostream.tcc:
 intersect.h:
+/usr/include/c++/10/iostream:
+/usr/include/c++/10/istream:
+/usr/include/c++/10/bits/istream.tcc:
 material.h:
 /usr/include/c++/10/tuple:
 /usr/include/c++/10/array:
@@ -905,8 +908,6 @@ material.h:
 /usr/include/c++/10/iomanip:
 /usr/include/c++/10/bits/quoted_string.h:
 /usr/include/c++/10/sstream:
-/usr/include/c++/10/istream:
-/usr/include/c++/10/bits/istream.tcc:
 /usr/include/c++/10/bits/sstream.tcc:
 /usr/include/c++/10/codecvt:
 /usr/include/c++/10/ext/concurrence.h:
@@ -967,7 +968,6 @@ algorithm.h:
 /usr/include/png++/reader.hpp:
 /usr/include/png++/writer.hpp:
 /usr/include/png++/generator.hpp:
-/usr/include/c++/10/iostream:
 /usr/include/png++/streaming_base.hpp:
 /usr/include/png++/consumer.hpp:
 /usr/include/png++/pixel_buffer.hpp:

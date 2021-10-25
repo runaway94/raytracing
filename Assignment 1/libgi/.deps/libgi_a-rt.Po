@@ -296,7 +296,9 @@ libgi_a-rt.o: rt.cpp /usr/include/stdc-predef.h rt.h \
  /usr/include/c++/10/bits/locale_facets.tcc \
  /usr/include/c++/10/bits/basic_ios.tcc \
  /usr/include/c++/10/bits/ostream.tcc scene.h camera.h intersect.h \
- material.h /usr/include/c++/10/tuple /usr/include/c++/10/array \
+ /usr/include/c++/10/iostream /usr/include/c++/10/istream \
+ /usr/include/c++/10/bits/istream.tcc material.h \
+ /usr/include/c++/10/tuple /usr/include/c++/10/array \
  /usr/include/c++/10/bits/uses_allocator.h \
  /usr/include/c++/10/bits/invoke.h /usr/include/c++/10/vector \
  /usr/include/c++/10/bits/stl_uninitialized.h \
@@ -322,7 +324,6 @@ libgi_a-rt.o: rt.cpp /usr/include/stdc-predef.h rt.h \
  /usr/include/c++/10/bits/locale_conv.h \
  /usr/include/c++/10/bits/unique_ptr.h /usr/include/c++/10/iomanip \
  /usr/include/c++/10/bits/quoted_string.h /usr/include/c++/10/sstream \
- /usr/include/c++/10/istream /usr/include/c++/10/bits/istream.tcc \
  /usr/include/c++/10/bits/sstream.tcc /usr/include/c++/10/codecvt \
  /usr/include/c++/10/ext/concurrence.h \
  /usr/include/c++/10/bits/shared_ptr.h \
@@ -692,6 +693,9 @@ rt.h:
 scene.h:
 camera.h:
 intersect.h:
+/usr/include/c++/10/iostream:
+/usr/include/c++/10/istream:
+/usr/include/c++/10/bits/istream.tcc:
 material.h:
 /usr/include/c++/10/tuple:
 /usr/include/c++/10/array:
@@ -730,8 +734,6 @@ material.h:
 /usr/include/c++/10/iomanip:
 /usr/include/c++/10/bits/quoted_string.h:
 /usr/include/c++/10/sstream:
-/usr/include/c++/10/istream:
-/usr/include/c++/10/bits/istream.tcc:
 /usr/include/c++/10/bits/sstream.tcc:
 /usr/include/c++/10/codecvt:
 /usr/include/c++/10/ext/concurrence.h:

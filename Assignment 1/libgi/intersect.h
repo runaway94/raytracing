@@ -1,7 +1,8 @@
 #pragma once
 
 #include "rt.h"
-
+#include "camera.h"
+#include <iostream>
 
 struct aabb {
 	vec3 min, max;
@@ -16,6 +17,23 @@ struct aabb {
 	}
 };
 
+
+inline float det(float A3[3][3]){
+
+	int d =
+	A3[0][0] * A3[1][1] * A3[2][2] +
+	A3[0][1] * A3[1][2] * A3[2][0] +
+	A3[0][2] * A3[1][0] * A3[2][1] -
+
+	A3[0][2] * A3[1][1] * A3[2][0] -
+	A3[0][0] * A3[1][2] * A3[2][1] -
+	A3[0][1] * A3[1][0] * A3[2][2]; 
+
+	return d;
+
+}
+
+
 // See Shirley (2nd Ed.), pp. 206. (library or excerpt online)
 inline bool intersect(const triangle &t, const vertex *vertices, const ray &ray, triangle_intersection &info) {
 		
@@ -24,6 +42,10 @@ inline bool intersect(const triangle &t, const vertex *vertices, const ray &ray,
 	vec3 cPos = vertices[t.c].pos;
 	vec3 dPos = ray.d;
 	vec3 oPos = ray.o;
+
+	std::cout << "Positions: " << aPos << bPos << cPos << std::endl;
+	std::cout << "Ray: " << oPos << " to " << dPos << std::endl;
+
 
 	/* Shirley book:
 		--						 --  --     --    --       --
@@ -43,7 +65,7 @@ inline bool intersect(const triangle &t, const vertex *vertices, const ray &ray,
 											 		 a(ei - hf) + b(gf - di) + c(dh - eg) 
 	
 													 f(ak - jb) + h(jc - al) + d(bl - kc)
-											t =		------------------------------------
+											t =	  -	------------------------------------
 											 		 a(ei - hf) + b(gf - di) + c(dh - eg) 	
 	*/
 
@@ -55,20 +77,53 @@ inline bool intersect(const triangle &t, const vertex *vertices, const ray &ray,
 	float j = aPos.x - oPos.x;
 	float k = aPos.y - oPos.y;
 	float l = aPos.z - oPos.z;
+
+	float A[3][3] = {
+		{a, d, g},
+		{b, e, h},
+		{c, f, i}
+	};
+
+	float A1[3][3] = {
+		{j, d, g},
+		{k, e, h},
+		{l, f, i}
+	};
+
+	float A2[3][3] = {
+		{a, j, g},
+		{b, k, h},
+		{c, l, i}
+	};
+
+	float A3[3][3] = {
+		{a, d, j},
+		{b, e, k},
+		{c, f, l}
+	};
 	
-	float M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g); 
 	
-	float beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g)) / M;
+	
+	float M = det(A);
+
+	std::cout << "M: " << M << std::endl;
+	
+	float beta = (det(A1))/M;
+	std::cout << "Beta: " << beta  << std::endl;
+
 	if(beta < 0 || beta > 1){
 		return false;
 	}
 
-	float gamma = (i*(a*k - j*b) + h*(j*c - a*l) + g*(b*l - k*c)) / M;
+	float gamma = (det(A2))/M;
+	std::cout << "gamma: " << gamma  << std::endl;
 	if(gamma < 0 || gamma > 1 || (beta + gamma) > 1){
 		return false;
 	}
 
-	float tVar = (f*(a*k - j*b) + h*(j*c - a*l) + d*(b*l - k*c)) / M;
+	float tVar = - ((f*(a*k - j*b) + h*(j*c - a*l) + d*(b*l - k*c)) / M);
+	float tVardet = (det(A3))/M;
+	std::cout << "t: " << tVar << "tvard: " << tVardet << std::endl;
 	if(tVar < ray.t_min || tVar > ray.t_max){
 		return false;
 	}
