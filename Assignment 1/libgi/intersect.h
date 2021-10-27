@@ -20,7 +20,7 @@ struct aabb {
 
 inline float det(float A3[3][3]){
 
-	int d =
+	float d =
 	A3[0][0] * A3[1][1] * A3[2][2] +
 	A3[0][1] * A3[1][2] * A3[2][0] +
 	A3[0][2] * A3[1][0] * A3[2][1] -
@@ -43,8 +43,8 @@ inline bool intersect(const triangle &t, const vertex *vertices, const ray &ray,
 	vec3 dPos = ray.d;
 	vec3 oPos = ray.o;
 
-	std::cout << "Positions: " << aPos << bPos << cPos << std::endl;
-	std::cout << "Ray: " << oPos << " to " << dPos << std::endl;
+	// std::cout << "Positions: " << aPos << bPos << cPos << std::endl;
+	// std::cout << "Ray: " << oPos << " to " << dPos << std::endl;
 
 
 	/* Shirley book:
@@ -106,29 +106,29 @@ inline bool intersect(const triangle &t, const vertex *vertices, const ray &ray,
 	
 	float M = det(A);
 
-	std::cout << "M: " << M << std::endl;
+// 	std::cout << "M: " << M << std::endl;
 	
 	float beta = (det(A1))/M;
-	std::cout << "Beta: " << beta  << std::endl;
+//	std::cout << "Beta: " << beta  << std::endl;
 
 	if(beta < 0 || beta > 1){
 		return false;
 	}
 
 	float gamma = (det(A2))/M;
-	std::cout << "gamma: " << gamma  << std::endl;
+	// #std::cout << "gamma: " << gamma  << std::endl;
 	if(gamma < 0 || gamma > 1 || (beta + gamma) > 1){
 		return false;
 	}
 
 	float tVar = - ((f*(a*k - j*b) + h*(j*c - a*l) + d*(b*l - k*c)) / M);
 	float tVardet = (det(A3))/M;
-	std::cout << "t: " << tVar << "tvard: " << tVardet << std::endl;
-	if(tVar < ray.t_min || tVar > ray.t_max){
+	// std::cout << "t: " << tVar << "tvard: " << tVardet << std::endl;
+	if(tVardet < ray.t_min || tVardet > ray.t_max){
 		return false;
 	}
 
-	info.t = tVar;
+	info.t = tVardet;
 	info.beta = beta;
 	info.gamma = gamma;
 

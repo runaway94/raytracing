@@ -15,6 +15,21 @@ using namespace std;
 
 gi_algorithm::sample_result primary_hit_display::sample_pixel(uint32_t x, uint32_t y, uint32_t samples) {
 	sample_result result;
+
+	for(int i = 0; i < rc->scene.triangles.size(); ++i) {
+		ray ray = cam_ray(rc->scene.camera, x, y);
+		triangle_intersection info;
+		bool intersection = intersect(rc->scene.triangles[i], rc->scene.vertices.data(), ray, info);
+		if(intersection){
+			//vector for color! make color on position x,y to col (r,g,b)
+			vec3 col;
+			col.x = 1.0f;
+			col.y = .0f;
+			col.z = .0f;
+			result.push_back({col, vec2(0)});
+		}
+	}
+
 	return result;
 }
 
