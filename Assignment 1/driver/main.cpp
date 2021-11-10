@@ -1,52 +1,70 @@
+#include "primary-hit.h"
+
 #include "libgi/rt.h"
-#include "libgi/camera.h"
-#include "libgi/scene.h"
-#include "libgi/intersect.h"
-#include "libgi/framebuffer.h"
 #include "libgi/context.h"
-#include "libgi/timer.h"
+#include "libgi/intersect.h"
+#include "libgi/util.h"
+#include "libgi/color.h"
 
 #include "libgi/global-context.h"
 
-#include "interaction.h"
+#include "libgi/wavefront-rt.h"
 
-#include "cmdline.h"
-
-#include <png++/png.hpp>
-#include <iostream>
-#include <chrono>
-#include <cstdio>
-#include <omp.h>
-
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/string_cast.hpp>
-#include <glm/gtc/random.hpp>
-
-using namespace std;
 using namespace glm;
-using namespace png;
+using namespace std;
 
-rgb_pixel to_png(vec3 col01) {
-	col01 = clamp(col01, vec3(0), vec3(1));
-	col01 = pow(col01, vec3(1.0f/2.2f));
-	return rgb_pixel(col01.x*255, col01.y*255, col01.z*255);
+gi_algorithm::sample_result primary_hit_display::sample_pixel(uint32_t x, uint32_t y, uint32_t samples) {
+	sample_result result;
+
+	//Assignment2
+	for(int i = 0; i < rc->scene.triangles.size(); ++i) {
+		ray ray = cam_ray(rc->scene.camera, x, y);
+		triangle_intersection info;
+		bool intersection = intersect(rc->scene.triangles[i], rc->scene.vertices.data(), ray, info);
+		if(intersection){
+			//vector for color! make color on position x,y to col (r,g,b)
+			vec3 col;
+			col.x = info.beta;
+			col.y = info.gamma;
+			col.z = info.t;
+			result.push_back({col, vec2(0)});
+		}
+	}
+
+	return result;
 }
 
-/*! \brief This is called from the \ref repl to compute a single image
- *  
- */
-void run(gi_algorithm *algo) {
-	using namespace std::chrono;
-	algo->prepare_frame();
-	test_camrays(rc->scene.camera);
-	rc->framebuffer.clear();
 
-	algo->compute_samples();
-	algo->finalize_frame();
-	
-	rc->framebuffer.png().write(cmdline.outfile);
+namespace wf {
+	namespace cpu {
+		struct store_hitpoint_albedo : public batch_ray_and_intersection_processing_cpu {
+			void run() override {
+				auto res = rc->resolution();
+				float one_over_samples = 1.0f/rc->sppx;
+				auto *rt = dynamic_cast<batch_rt*>(rc->scene.batch_rt);
+				assert(rt != nullptr);
+				cout << res << endl;
+				#pragma omp parallel for
+				for (int y = 0; y < res.y; ++y)
+					for (int x = 0; x < res.x; ++x) {
+						vec3 radiance(0);
+						for (int sample = 0; sample < rc->sppx; ++sample) {
+							triangle_intersection closest = rt->rd.intersections[y*res.x+x];
+							if (closest.valid()) {
+								diff_geom dg(closest, rc->scene);
+								radiance += dg.albedo();
+							}
+						}
+						radiance *= one_over_samples;
+						rc->framebuffer.color(x,y) = vec4(radiance, 1);
+					}
+
+			}
+		};
+	}
 }
 
+<<<<<<< HEAD
 void rt_bench() {
 	//create Buffer for rays and intersections with the size of the camera resolution
 	buffer<triangle_intersection> triangle_intersections(rc->scene.camera.w, rc->scene.camera.h);
@@ -99,9 +117,24 @@ int main(int argc, char **argv)
 	// }
 	// if (cmdline.interact)
 	// 	repl(cin, uc);
+=======
+void primary_hit_display_wf::compute_samples() {
+>>>>>>> 58caf0320091bfbec6f8583f6e6ae3f710fff2d3
 
-	// stats_timer.print();
+// 	#pragma omp parallel for
+// 	for (int y = 0; y < res.y; ++y)
+// 		for (int x = 0; x < res.x; ++x)
+// 			rays[y*w+x] = cam_ray(rc->scene.camera, x, y, glm::vec2(rc->rng.uniform_float()-0.5f, rc->rng.uniform_float()-0.5f));
+// 
+	wf::cpu::batch_cam_ray_setup_cpu().run();
+	auto *batch_rt = rc->scene.batch_rt;
+	assert(batch_rt != nullptr);
+	batch_rt->compute_closest_hit();
 
+<<<<<<< HEAD
 	// delete rc->algo;
 	// return 0;
+=======
+	wf::cpu::store_hitpoint_albedo().run();
+>>>>>>> 58caf0320091bfbec6f8583f6e6ae3f710fff2d3
 }
