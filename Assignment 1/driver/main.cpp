@@ -67,41 +67,41 @@ void rt_bench() {
 int main(int argc, char **argv)
 {
 
-	// vec3 a = vec3(1, 1, 0);
-	// vec3 b = vec3(5, 1, 0);
-	// vec3 c = vec3(3, 4, 0);
+	vec3 a = vec3(1, 1, 0);
+	vec3 b = vec3(5, 1, 0);
+	vec3 c = vec3(3, 4, 0);
 
-	// vertex ver[3];
-	// ver[0].pos = a;
-	// ver[1].pos = b;
-	// ver[2].pos = c;
+	vertex ver[3];
+	ver[0].pos = a;
+	ver[1].pos = b;
+	ver[2].pos = c;
 
-	// triangle tri;
-	// tri.a = 0;
-	// tri.b = 1;
-	// tri.c = 2;
+	triangle tri;
+	tri.a = 0;
+	tri.b = 1;
+	tri.c = 2;
 
-	// vec3 o = vec3(0, 0, 3);
-	// vec3 d = vec3(3, 2, -3);
-	// ray r = ray(o, d);
+	vec3 o = vec3(0, 0, 3);
+	vec3 d = vec3(3, 2, -3);
+	ray r = ray(o, d);
 
-	// triangle_intersection info;
+	triangle_intersection info;
 
-	// bool treffer = intersect(tri, ver, r, info);
-	// cout << treffer << endl;
+	bool treffer = intersect(tri, ver, r, info);
+	cout << treffer << endl;
 
-	parse_cmdline(argc, argv);
+	// parse_cmdline(argc, argv);
 
-	repl_update_checks uc;
-	if (cmdline.script != "") {
-		ifstream script(cmdline.script);
-		repl(script, uc);
-	}
-	if (cmdline.interact)
-		repl(cin, uc);
+	// repl_update_checks uc;
+	// if (cmdline.script != "") {
+	// 	ifstream script(cmdline.script);
+	// 	repl(script, uc);
+	// }
+	// if (cmdline.interact)
+	// 	repl(cin, uc);
 
-	stats_timer.print();
+	// stats_timer.print();
 
-	delete rc->algo;
-	return 0;
+	// delete rc->algo;
+	// return 0;
 }

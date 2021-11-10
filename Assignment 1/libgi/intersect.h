@@ -101,34 +101,31 @@ inline bool intersect(const triangle &t, const vertex *vertices, const ray &ray,
 		{b, e, k},
 		{c, f, l}
 	};
-	
-	
-	
+
 	float M = det(A);
 
-// 	std::cout << "M: " << M << std::endl;
+ 	std::cout << "M: " << M << std::endl;
 	
 	float beta = (det(A1))/M;
-//	std::cout << "Beta: " << beta  << std::endl;
+	std::cout << "Beta: " << beta  << std::endl;
 
 	if(beta < 0 || beta > 1){
 		return false;
 	}
 
 	float gamma = (det(A2))/M;
-	// #std::cout << "gamma: " << gamma  << std::endl;
+	std::cout << "gamma: " << gamma  << std::endl;
 	if(gamma < 0 || gamma > 1 || (beta + gamma) > 1){
 		return false;
 	}
 
-	float tVar = - ((f*(a*k - j*b) + h*(j*c - a*l) + d*(b*l - k*c)) / M);
-	float tVardet = (det(A3))/M;
-	// std::cout << "t: " << tVar << "tvard: " << tVardet << std::endl;
-	if(tVardet < ray.t_min || tVardet > ray.t_max){
+	float tt = (det(A3))/M;
+	std::cout << "t: " << tt << std::endl;
+	if(tt < ray.t_min || tt > ray.t_max){
 		return false;
 	}
 
-	info.t = tVardet;
+	info.t = tt;
 	info.beta = beta;
 	info.gamma = gamma;
 
