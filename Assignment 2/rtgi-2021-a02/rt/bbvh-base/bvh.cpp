@@ -26,7 +26,12 @@ uint32_t naive_bvh::subdivide(std::vector<triangle> &triangles, std::vector<vert
 	
 	// rekursionsende, wenn nur noch ein Dreieck da ist
 	if(end-start == 1){
-		//...
+		uint32_t id = nodes.size();
+		
+		//array erweitern
+		nodes.emplace_back();
+
+		nodes[id].triangle = start;
 		return;
 	}
 
@@ -34,6 +39,7 @@ uint32_t naive_bvh::subdivide(std::vector<triangle> &triangles, std::vector<vert
 	nodes.emplace_back();
 
 	//eine box machen, die alle dreiecke enthält
+	//anfangs ist die Box ganz klein und wächst dann für jedes Eck von jedem Dreieck, das sich noch draußen befindet
 	aabb box;
 	for(int i = start; i < end; i++){
 		triangle tri = triangles[i];
@@ -42,6 +48,11 @@ uint32_t naive_bvh::subdivide(std::vector<triangle> &triangles, std::vector<vert
 		box.grow(vertices[tri.c].pos);
 	}
 
+	//Hilfsfunktion, um die Mitte der Dreiecke zu berechnen
+	auto center = [&](const triangle &triangle) {
+		return (vertices[triangle.a].pos + vertices[triangle.b].pos + vertices[triangle.c].pos) * 0.33333f;
+	};
+
 	int xDist = box.min.x - box.max.x;
 	int yDist = box.min.y - box.max.y;
 	int zDist = box.min.z - box.max.z;
@@ -49,28 +60,58 @@ uint32_t naive_bvh::subdivide(std::vector<triangle> &triangles, std::vector<vert
 	int maxDist = max(xDist, yDist);
 	int maxDist = max(maxDist, zDist);
 
+
+	//dreiecke entlang der längsten Kante der Box sortieren
 	if(maxDist == xDist){
 		//split at x
 		// -> sortiere die dreiecke nach der x position und nimm dann einfach jeweils das halbe array
+		std::sort(triangles.data() + start, triangles.data() + end, 
+
+		//lambda expression (wonach soll sortiert werden, wie in Java)
+		[&](const triangle &a, const triangle &b) {
+			return center(a).x < center(b).x;
+		});
 	}
 	else if(maxDist == yDist){
 		//split at y
+		std::sort(triangles.data() + start, triangles.data() + end, 
+
+		//lambda function
+		[&](const triangle &a, const triangle &b) {
+			return center(a).y < center(b).y;
+		});
 	}
 	else if(maxDist == zDist){
 		//split at z
+
+		std::sort(triangles.data() + start, triangles.data() + end, 
+
+		//lambda function
+		[&](const triangle &a, const triangle &b) {
+			return center(a).z < center(b).z;
+		});
 	}
 
+	//liste der dreiecke halbieren und funktion rekursiv aufrufen
+	int middle = start + (end-start)/2;
+
+	uint32_t id = nodes.size();
 	
+	//array erweitern
+	nodes.emplace_back();
 
+	uint32_t leftSide = subdivide(triangles, vertices, start, middle);
+	uint32_t rightSide = subdivide(triangles, vertices, middle+1, end);
 
+	nodes[id].left = leftSide;
+	nodes[id].right = rightSide;	
+	nodes[id].box = box;
 
-
-	
-	return 0;
+	return id;
 }
 
 triangle_intersection naive_bvh::closest_hit(const ray &ray) {
-	// todo
+
 	throw std::logic_error("Not implemented, yet");
 	return triangle_intersection();
 }
