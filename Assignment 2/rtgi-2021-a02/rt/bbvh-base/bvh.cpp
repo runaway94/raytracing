@@ -111,6 +111,27 @@ uint32_t naive_bvh::subdivide(std::vector<triangle> &triangles, std::vector<vert
 }
 
 triangle_intersection naive_bvh::closest_hit(const ray &ray) {
+	triangle_intersection closest, intersect;
+	
+	//array stack
+	uint32_t stack[25];
+	uint32_t sp = 0;
+	
+	//push root onto stack
+	stack[0] = root;
+
+	//check if ray intersects root
+	//while stack is not empty -> while sp >= 0
+	while(sp>=0){
+		//push last node from stack
+		node node = nodes[stack[sp]];
+
+		//check if node intersects
+		
+	}
+
+
+
 
 	throw std::logic_error("Not implemented, yet");
 	return triangle_intersection();
