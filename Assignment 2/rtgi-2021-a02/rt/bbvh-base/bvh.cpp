@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <iostream>
 #include <chrono>
+#include <stack>
+
 
 using namespace glm;
 
@@ -111,30 +113,39 @@ uint32_t naive_bvh::subdivide(std::vector<triangle> &triangles, std::vector<vert
 }
 
 triangle_intersection naive_bvh::closest_hit(const ray &ray) {
-	triangle_intersection closest, intersect;
 	
-	//array stack
-	uint32_t stack[25];
-	uint32_t sp = 0;
+	//node stack, als array wäre performanter aber egal
+	std::stack<node> nodeStack;
+
+	//root auf den stack legen
+	nodeStack.push(nodes[0]);
+
+	node closestNode;
+	float closestHit;
 	
-	//push root onto stack
-	stack[0] = root;
+	while (!nodeStack.empty())
+	{
+		//obersten knoten vom stack nehmen
+		node n = nodeStack.top();
+		nodeStack.pop();
 
-	//check if ray intersects root
-	//while stack is not empty -> while sp >= 0
-	while(sp>=0){
-		//push last node from stack
-		node node = nodes[stack[sp]];
+		//distance als erweiterten rückgabewert übergeben
+		float distance;
 
-		//check if node intersects
-		
+		//der ray trifft die box...
+		if(intersect(n.box, ray, distance)){
+
+			//die distanz ist die bisher nähste -> 
+			if(distance < closestHit){
+				closestHit = distance;
+				closestNode = n;
+			}
+			nodeStack.push(nodes[n.left]);
+			nodeStack.push(nodes[n.right]);
+		}
 	}
+	return closestNode.inner();
 
-
-
-
-	throw std::logic_error("Not implemented, yet");
-	return triangle_intersection();
 }
 
 

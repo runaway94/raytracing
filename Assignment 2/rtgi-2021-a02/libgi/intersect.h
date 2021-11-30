@@ -134,6 +134,9 @@ inline bool intersect(const triangle &t, const vertex *vertices, const ray &ray,
 inline bool intersect(const aabb &box, const ray &ray, float &is) {
 	// todo
 	//is = distance
+
+	int t_dist = 0;
+
 	float txmin;
 	float txmax;
 	if(ray.d.x >= 0){
@@ -174,6 +177,13 @@ inline bool intersect(const aabb &box, const ray &ray, float &is) {
 		return false;
 	}
 
+	if(txmin < tymin && tymin < tzmin){
+		is = txmin;
+	}
+	else if(tymin < txmin && tymin < tzmin){
+		is = tymin;
+	}
+	else is = tzmin;
 	return true;
 }
 
