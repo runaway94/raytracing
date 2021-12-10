@@ -189,11 +189,86 @@ typename std::enable_if<LO!=bbvh_triangle_layout::flat,void>::type binary_bvh_tr
 	this->index = std::move(index);
 }
 
+
+/*
+*  Assignment 2.3
+*/
+
 template<bbvh_triangle_layout tr_layout, bbvh_esc_mode esc_mode>
-uint32_t binary_bvh_tracer<tr_layout, esc_mode>::subdivide_om(std::vector<prim> &prims, std::vector<uint32_t> &index, uint32_t start, uint32_t end) {
-	// todo
-	std::logic_error("Not implemented, yet");
-	return 0;
+uint32_t binary_bvh_tracer<tr_layout, esc_mode>::subdivide_om(
+	std::vector<prim> &prims, //die boxen (???)
+	std::vector<uint32_t> &index, 
+	uint32_t start, 
+	uint32_t end) 
+	{
+	// TODO
+	// rekursionsende, wenn nur noch ein Dreieck da ist
+	if(end-start == 1){
+		uint32_t id = nodes.size();
+		
+		//array erweitern
+		nodes.emplace_back();
+
+		//???
+		nodes[id].tri_offset(start);
+		nodes[id].tri_count(end-start);
+		return id;
+	}
+	
+	aabb box; //eine Box, die um alle vierecke dezeichnet werden soll
+	
+	//für jede Box in diesem Bereich...
+	for (int i = start; i < end; ++i){
+		aabb innerBox = prims[index[i]];
+		box.grow(innerBox);
+	}
+
+	//wie bei uint32_t naive_bvh::subdivide die längste Kante 
+	//rausfinden und dann die Boxen entlang dieseser aufteilen
+	int xDist = box.max.x - box.min.x;
+	int yDist = box.max.y - box.min.y;
+	int zDist = box.max.z - box.min.z;
+
+	int maxDist = max(xDist, yDist);
+	maxDist = max(maxDist, zDist);
+	
+	//dreiecke entlang der längsten Kante der Box sortieren
+	if(maxDist == xDist){
+
+		//entlang der x-Achse sortieren
+		std::sort(index.data()+start, index.data()+end,
+				  [&](uint32_t a, uint32_t b) { return prims[a].center().x < prims[b].center().x; });
+	}
+	else if(maxDist == yDist){
+
+		//entlang der y-Achse sortieren
+		std::sort(index.data()+start, index.data()+end,
+				  [&](uint32_t a, uint32_t b) { return prims[a].center().y < prims[b].center().y; });
+	}
+	else if(maxDist == zDist){
+
+		//entlang der z-Achse sortieren
+		std::sort(index.data()+start, index.data()+end,
+				  [&](uint32_t a, uint32_t b) { return prims[a].center().z < prims[b].center().z; });
+	}
+
+	//liste der dreiecke halbieren und funktion rekursiv aufrufen
+	int middle = start + (end-start)/2;
+	uint32_t id = nodes.size();
+	nodes.emplace_back();
+	uint32_t l = subdivide_om(prims, index, start, middle);
+	uint32_t r = subdivide_om(prims, index, middle, end);
+
+	//nachfolger Knoten bestimmen
+	nodes[id].link_l = l;
+	nodes[id].link_r = r;
+
+	//weil die knoten ja jetzt boxen enthalten sollen, lassen wir
+	//hier in den Kindknoten gleich eine Box um die boxen wachsen
+	for (int i = start; i < middle; ++i) nodes[id].box_l.grow(prims[index[i]]);
+	for (int i = middle;   i < end; ++i) nodes[id].box_r.grow(prims[index[i]]);
+	
+	return id;
 }
 
 template<bbvh_triangle_layout tr_layout, bbvh_esc_mode esc_mode>

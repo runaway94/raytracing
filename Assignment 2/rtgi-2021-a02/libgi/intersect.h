@@ -129,51 +129,130 @@ inline bool intersect(const triangle &t, const vertex *vertices, const ray &ray,
 	return true;
 }	
 
-
+/*
+*  Assignment 2.1
+*/
 
 inline bool intersect(const aabb &box, const ray &ray, float &is) {
 	// todo
 	//is = distance
-	float txmin;
-	float txmax;
-	if(ray.d.x >= 0){
-		txmin = (box.min.x - ray.o.x)/ray.d.x;
-		txmax = (box.max.x - ray.o.x)/ray.d.x;
+
+	// int t_dist = 0;
+
+	// float txmin;
+	// float txmax;
+	// if(ray.d.x >= 0){
+	// 	txmin = (box.min.x - ray.o.x)/ray.d.x;
+	// 	txmax = (box.max.x - ray.o.x)/ray.d.x;
+	// }
+	// else {
+	// 	txmin = (box.max.x - ray.o.x)/ray.d.x;
+	// 	txmax = (box.min.x - ray.o.x)/ray.d.x;
+	// }
+
+	// float tymin;
+	// float tymax;
+	// if(ray.d.y >= 0){
+	// 	float tymin = (box.min.y - ray.o.y)/ray.d.y;
+	// 	float tymax = (box.max.y - ray.o.y)/ray.d.y;
+	// }
+	// else {
+	// 	tymin = (box.max.y - ray.o.y)/ray.d.y;
+	// 	tymax = (box.min.y - ray.o.y)/ray.d.y;
+	// }
+
+	// float tzmin;
+	// float tzmax;
+	// if(ray.d.z >= 0){
+	// 	tzmin = (box.min.z - ray.o.z)/ray.d.z;
+	// 	tzmax = (box.max.z - ray.o.z)/ray.d.z;
+	// }
+	// else {
+	// 	tzmin = (box.max.z - ray.o.z)/ray.d.z;
+	// 	tzmax = (box.min.z - ray.o.z)/ray.d.z;
+	// }
+
+	// // std::cout << "txmin: " << txmin << "txmax: " << txmax << std::endl;
+	// // std::cout << "tymin: " << tymin << "tymax: " << tymax << std::endl;
+	// // std::cout << "tzmin: " << tzmin << "tzmax: " << tzmax << std::endl;
+	// if(txmin > tymax || txmin > tzmin || tymin > txmax || tymin > tzmax || tzmin > txmax || tzmin > tymax) {
+	// 	return false;
+	// }
+
+	// if(txmin < tymin && tymin < tzmin){
+	// 	is = txmin;
+	// }
+	// else if(tymin < txmin && tymin < tzmin){
+	// 	is = tymin;
+	// }
+	// else is = tzmin;
+	// return true;
+
+
+	float t_near = -FLT_MAX;
+	float t_far  =  FLT_MAX;
+
+	if (ray.d.x == 0) {
+		if (ray.o.x < box.min.x || ray.o.x > box.max.x)
+			return false;
 	}
 	else {
-		txmin = (box.max.x - ray.o.x)/ray.d.x;
-		txmax = (box.min.x - ray.o.x)/ray.d.x;
+		float t1 = (box.min.x - ray.o.x) / ray.d.x;
+		float t2 = (box.max.x - ray.o.x) / ray.d.x;
+
+		if (t1 > t2)	{	float tmp = t1;	t1 = t2; t2 = tmp; 	}
+
+		if (t1 > t_near)	t_near = t1;
+		if (t2 < t_far)		t_far = t2;
+
+		if (t_near > t_far)	// box missed
+			return false;
+
+		if (t_far < ray.t_min || t_near > ray.t_max)
+			return false;
 	}
 
-	float tymin;
-	float tymax;
-	if(ray.d.y >= 0){
-		float tymin = (box.min.y - ray.o.y)/ray.d.y;
-		float tymax = (box.max.y - ray.o.y)/ray.d.y;
+	if (ray.d.y == 0) {
+		if (ray.o.y < box.min.y || ray.o.y > box.max.y)
+			return false;
 	}
 	else {
-		tymin = (box.max.y - ray.o.y)/ray.d.y;
-		tymax = (box.min.y - ray.o.y)/ray.d.y;
+		float t1 = (box.min.y - ray.o.y) / ray.d.y;
+		float t2 = (box.max.y - ray.o.y) / ray.d.y;
+
+		if (t1 > t2)	{	float tmp = t1;	t1 = t2; t2 = tmp; 	}
+
+		if (t1 > t_near)	t_near = t1;
+		if (t2 < t_far)		t_far = t2;
+
+		if (t_near > t_far)	// box missed
+			return false;
+
+		if (t_far < ray.t_min || t_near > ray.t_max)
+			return false;
 	}
 
-	float tzmin;
-	float tzmax;
-	if(ray.d.z >= 0){
-		tzmin = (box.min.z - ray.o.z)/ray.d.z;
-		tzmax = (box.max.z - ray.o.z)/ray.d.z;
+	if (ray.d.z == 0) {
+		if (ray.o.z < box.min.z || ray.o.z > box.max.z)
+			return false;
 	}
 	else {
-		tzmin = (box.max.z - ray.o.z)/ray.d.z;
-		tzmax = (box.min.z - ray.o.z)/ray.d.z;
+		float t1 = (box.min.z - ray.o.z) / ray.d.z;
+		float t2 = (box.max.z - ray.o.z) / ray.d.z;
+
+		if (t1 > t2)	{	float tmp = t1;	t1 = t2; t2 = tmp; }
+
+		if (t1 > t_near)	t_near = t1;
+		if (t2 < t_far)		t_far = t2;
+
+		if (t_near > t_far)	// box missed
+			return false;
+
+		if (t_far < ray.t_min || t_near > ray.t_max)
+			return false;
 	}
 
-	std::cout << "txmin: " << txmin << "txmax: " << txmax << std::endl;
-	std::cout << "tymin: " << tymin << "tymax: " << tymax << std::endl;
-	std::cout << "tzmin: " << tzmin << "tzmax: " << tzmax << std::endl;
-	if(txmin > tymax || txmin > tzmin || tymin > txmax || tymin > tzmax || tzmin > txmax || tzmin > tymax) {
-		return false;
-	}
-
+	is = t_near;
 	return true;
 }
 

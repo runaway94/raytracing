@@ -40,6 +40,8 @@ struct binary_bvh_tracer : public individual_ray_tracer {
 		aabb box_l, box_r;
 		int32_t link_l, link_r;
 		bool inner() const { return link_r >= 0; }
+	
+	
 		int32_t tri_offset() const { return -link_l; }
 		int32_t tri_count()  const { return -link_r; }
 		void tri_offset(int32_t offset) { link_l = -offset; }
