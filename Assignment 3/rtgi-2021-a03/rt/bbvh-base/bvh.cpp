@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <chrono>
+#include <stack>
 
 using namespace glm;
 
@@ -78,38 +79,39 @@ uint32_t naive_bvh::subdivide(std::vector<triangle> &triangles, std::vector<vert
 }
 
 triangle_intersection naive_bvh::closest_hit(const ray &ray) {
-	triangle_intersection closest, intersection;
-	uint32_t stack[25];
-	int32_t sp = 0;
-	stack[0] = root;
-#ifdef COUNT_HITS
-	unsigned int hits = 0;
-#endif
-	while (sp >= 0) {
-		node node = nodes[stack[sp--]];
-#ifdef COUNT_HITS
-		hits++;
-#endif
-		if (node.inner()) {
-			float dist;
-			if (intersect(node.box, ray, dist))
-				if (dist < closest.t) {
-					stack[++sp] = node.left;
-					stack[++sp] = node.right;
-				}
-		}
-		else {
-			if (intersect(scene->triangles[node.triangle], scene->vertices.data(), ray, intersection))
-				if (intersection.t < closest.t) {
-					closest = intersection;
-					closest.ref = node.triangle;
-				}
+	
+	//node stack, als array wäre performanter aber egal
+	std::stack<node> nodeStack;
+
+	//root auf den stack legen
+	nodeStack.push(nodes[0]);
+
+	node closestNode;
+	float closestHit;
+	
+	while (!nodeStack.empty())
+	{
+		//obersten knoten vom stack nehmen
+		node n = nodeStack.top();
+		nodeStack.pop();
+
+		//distance als erweiterten rückgabewert übergeben
+		float distance;
+
+		//der ray trifft die box...
+		if(intersect(n.box, ray, distance)){
+
+			//die distanz ist die bisher nähste -> 
+			if(distance < closestHit){
+				closestHit = distance;
+				closestNode = n;
+			}
+			nodeStack.push(nodes[n.left]);
+			nodeStack.push(nodes[n.right]);
 		}
 	}
-#ifdef COUNT_HITS
-	closest.ref = hits;
-#endif
-	return closest;
+	return closestNode.inner();
+
 }
 
 
